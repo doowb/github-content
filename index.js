@@ -54,7 +54,7 @@ GithubContent.prototype.file = function(fp, options, cb) {
   var url = '/';
   if (this.cache.owner) url += this.cache.owner + '/';
   if (this.cache.repo) url += this.cache.repo + '/';
-  if (this.cache.branch) url += this.cache.branch + '/';
+  url += (this.cache.branch ? this.cache.branch : 'master') + '/';
   url += fp;
   this.get(url, options, function(err, content) {
     if (err) return cb(err);
