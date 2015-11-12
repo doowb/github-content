@@ -7,6 +7,60 @@
 
 'use strict';
 
-module.exports = function () {
-  // do stuff
+var GithubBase = require('github-base');
+
+function GithubContent(options) {
+  if (!(this instanceof GithubContent)) {
+    return new GithubContent(options);
+  }
+
+  // setup our specific options
+  options = options || {};
+  options.json = false;
+  options.apiurl = 'https://raw.githubusercontent.com';
+  GithubBase.call(this, options);
+
+  this.cache = {
+    owner: this.options.owner,
+    repo: this.options.repo,
+    branch: this.options.branch
+  };
+}
+
+GithubBase.extend(GithubContent);
+
+GithubContent.prototype.owner = function(name) {
+  this.cache.owner = name;
+  return this;
 };
+
+GithubContent.prototype.repo = function(repo) {
+  this.cache.repo = repo;
+  return this;
+};
+
+GithubContent.prototype.branch = function(branch) {
+  this.cache.branch = branch;
+  return this;
+};
+
+GithubContent.prototype.file = function(fp, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+  options = options || {};
+
+  var url = '/';
+  if (this.cache.owner) url += this.cache.owner + '/';
+  if (this.cache.repo) url += this.cache.repo + '/';
+  if (this.cache.branch) url += this.cache.branch + '/';
+  url += fp;
+  this.get(url, options, function(err, content) {
+    if (err) return cb(err);
+    cb(null, {path: fp, content: content});
+  });
+  return this;
+};
+
+module.exports = GithubContent;

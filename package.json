@@ -19,8 +19,11 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "github-base": "^0.4.0"
+  },
   "devDependencies": {
+    "async": "^1.5.0",
     "mocha": "*",
     "should": "*"
   },
