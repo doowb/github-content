@@ -36,7 +36,15 @@
     "should": "*",
     "sinon": "^1.17.2"
   },
-  "keywords": [],
+  "keywords": [
+    "base",
+    "download",
+    "files",
+    "github",
+    "github-base",
+    "raw",
+    "usercontent"
+  ],
   "verb": {
     "related": {
       "list": [
