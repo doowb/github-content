@@ -27,8 +27,14 @@
     "lazy-cache": "^0.2.4"
   },
   "devDependencies": {
+    "eslint-friendly-formatter": "^1.2.2",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.1.0",
+    "gulp-istanbul": "^0.10.2",
+    "gulp-mocha": "^2.1.3",
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "sinon": "^1.17.2"
   },
   "keywords": []
 }
