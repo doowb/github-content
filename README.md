@@ -1,6 +1,6 @@
 # github-content [![NPM version](https://badge.fury.io/js/github-content.svg)](http://badge.fury.io/js/github-content)  [![Build Status](https://travis-ci.org/doowb/github-content.svg)](https://travis-ci.org/doowb/github-content)
 
-> Easily retrieve raw github content.
+> Easily download files from github raw user content.
 
 ## Install
 
