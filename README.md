@@ -1,13 +1,13 @@
-# github-content [![NPM version](https://badge.fury.io/js/github-content.svg)](http://badge.fury.io/js/github-content)  [![Build Status](https://travis-ci.org/doowb/github-content.svg)](https://travis-ci.org/doowb/github-content)
+# github-content [![NPM version](https://img.shields.io/npm/v/github-content.svg?style=flat)](https://www.npmjs.com/package/github-content) [![NPM monthly downloads](https://img.shields.io/npm/dm/github-content.svg?style=flat)](https://npmjs.org/package/github-content)  [![NPM total downloads](https://img.shields.io/npm/dt/github-content.svg?style=flat)](https://npmjs.org/package/github-content) [![Linux Build Status](https://img.shields.io/travis/doowb/github-content.svg?style=flat&label=Travis)](https://travis-ci.org/doowb/github-content) [![Windows Build Status](https://img.shields.io/appveyor/ci/doowb/github-content.svg?style=flat&label=AppVeyor)](https://ci.appveyor.com/project/doowb/github-content)
 
 > Easily download files from github raw user content.
 
 ## Install
 
-Install with [npm](https://www.npmjs.com/)
+Install with [npm](https://www.npmjs.com/):
 
 ```sh
-$ npm i github-content --save
+$ npm install --save github-content
 ```
 
 ## Usage
@@ -18,13 +18,13 @@ var githubContent = require('github-content');
 
 ## API
 
-### [GithubContent](index.js#L32)
+### [GithubContent](index.js#L33)
 
 Create an instance of GithubContent to setup downloading of files.
 
 **Params**
 
-* `options` **{Object}**: Options to set on instance. Additional options passed to [github-base]
+* `options` **{Object}**: Options to set on instance. Additional options passed to [github-base](https://github.com/jonschlinkert/github-base)
 * `options.owner` **{String}**: Set the owner to be used for each file.
 * `options.repo` **{String}**: Set the repository to be used for each file.
 * `options.branch` **{String}**: Set the branch to be used for each file. Defaults to `master`
@@ -41,59 +41,14 @@ var options = {
 var gc = new GithubContent(options);
 ```
 
-### [.owner](index.js#L63)
+### [.file](index.js#L73)
 
-Set the `owner` to be used when downloading a file.
-
-**Params**
-
-* `owner` **{String}**: Github owner (user or organization)
-* `returns` **{Object}** `this`: to enable chaining
-
-**Example**
-
-```js
-gc.owner('doowb');
-```
-
-### [.repo](index.js#L80)
-
-Set the `repo` to be used when downloading a file.
+Download a single file given the file name and repository options. File object returned will contain a `.path` property with the file path passed in and a `.contents` property with the contents of the downloaded file.
 
 **Params**
 
-* `repo` **{String}**: Github repoistory
-* `returns` **{Object}** `this`: to enable chaining
-
-**Example**
-
-```js
-gc.repo('github-content');
-```
-
-### [.branch](index.js#L97)
-
-Set the `branch` to be used when downloading a file.
-
-**Params**
-
-* `branch` **{String}**: Github branch
-* `returns` **{Object}** `this`: to enable chaining
-
-**Example**
-
-```js
-gc.branch('dev');
-```
-
-### [.file](index.js#L127)
-
-Download a single file using the previous settings and the passed in file name. File object returned will contain a `.path` property with the file path passed in and a `.content` property with the contents of the downloaded file.
-
-**Params**
-
-* `fp` **{String}**: file to download
-* `options` **{Object}**: Additional options to base to [github-base] `.get` method.
+* `path` **{String}**: file path to download
+* `options` **{Object}**: Additional options to base to [github-base](https://github.com/jonschlinkert/github-base) `.get` method.
 * `cb` **{Function}**: Callback function taking `err` and `file`
 * `returns` **{Object}** `this`: to enable chaining
 
@@ -112,14 +67,14 @@ gc.file('package.json', function(err, file) {
 //=> }
 ```
 
-### [.files](index.js#L173)
+### [.files](index.js#L129)
 
-Download an array of files using the previous settings and the passed in file names. File objects returned will contain a `.path` property with the file path passed in and a `.content` property with the contents of the downloaded file.
+Download an array of files using the previous settings and the passed in file names. File objects returned will contain a `.path` property with the file path passed in and a `.contents` property with the contents of the downloaded file.
 
 **Params**
 
 * `files` **{String|Array}**: files to download
-* `options` **{Object}**: Additional options to base to [github-base] `.get` method.
+* `options` **{Object}**: Additional options to base to [github-base](https://github.com/jonschlinkert/github-base) `.get` method.
 * `cb` **{Function}**: Callback function taking `err` and `files`
 * `returns` **{Object}** `this`: to enable chaining
 
@@ -140,34 +95,46 @@ gc.files(['package.json', 'index.js'], function(err, files) {
 //=> }
 ```
 
-## Related projects
+## About
 
-[github-base](https://www.npmjs.com/package/github-base): Base methods for creating node.js apps that work with the GitHub API. | [homepage](https://github.com/jonschlinkert/github-base)
+### Related projects
 
-## Running tests
+[github-base](https://www.npmjs.com/package/github-base): JavaScript wrapper that greatly simplifies working with GitHub's API. | [homepage](https://github.com/jonschlinkert/github-base "JavaScript wrapper that greatly simplifies working with GitHub's API.")
 
-Install dev dependencies:
+### Contributing
+
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](../../issues/new).
+
+### Building docs
+
+_(This project's readme.md is generated by [verb](https://github.com/verbose/verb-generate-readme), please don't edit the readme directly. Any changes to the readme must be made in the [.verb.md](.verb.md) readme template.)_
+
+To generate the readme, run the following command:
 
 ```sh
-$ npm i -d && npm test
+$ npm install -g verbose/verb#dev verb-generate-readme && verb
 ```
 
-## Contributing
+### Running tests
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/doowb/github-content/issues/new).
+Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command:
 
-## Author
+```sh
+$ npm install && npm test
+```
+
+### Author
 
 **Brian Woodward**
 
-+ [github/doowb](https://github.com/doowb)
-+ [twitter/doowb](http://twitter.com/doowb)
+* [github/doowb](https://github.com/doowb)
+* [twitter/doowb](https://twitter.com/doowb)
 
-## License
+### License
 
-Copyright © 2015 Brian Woodward
-Released under the MIT license.
+Copyright © 2017, [Brian Woodward](https://github.com/doowb).
+Released under the [MIT License](LICENSE).
 
 ***
 
-_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on November 13, 2015._
+_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on September 11, 2017._
