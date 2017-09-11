@@ -1,8 +1,8 @@
 /*!
  * github-content <https://github.com/doowb/github-content>
  *
- * Copyright (c) 2015, Brian Woodward.
- * Licensed under the MIT License.
+ * Copyright (c) 2015-2017, Brian Woodward.
+ * Released under the MIT License.
  */
 
 'use strict';

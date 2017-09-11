@@ -63,7 +63,7 @@ describe('github-content', function () {
     });
   });
 
-  it('should download a file', function (done) {
+  it('should not download a file', function (done) {
     var gc = new GithubContent();
     gc.owner('doowb')
       .repo('github-content')
@@ -73,7 +73,7 @@ describe('github-content', function () {
     gc.file('notfound.json', false, function(err, file) {
       if (err) return done(err);
       assert.equal(file.path, 'notfound.json');
-      assert.equal(file.content, 'Not Found');
+      assert.equal(file.content, '404: Not Found\n');
       done();
     });
   });
