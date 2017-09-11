@@ -28,6 +28,7 @@
     "eslint-friendly-formatter": "^1.2.2",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.1.0",
+    "gulp-format-md": "^1.0.0",
     "gulp-istanbul": "^0.10.2",
     "gulp-mocha": "^2.1.3",
     "mocha": "*",
@@ -48,6 +49,17 @@
       "list": [
         "github-base"
       ]
+    },
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
     }
   }
 }
