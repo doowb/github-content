@@ -8,7 +8,8 @@
 'use strict';
 
 var GithubBase = require('github-base');
-var utils = require('./utils');
+var extend = require('extend-shallow');
+var each = require('each-parallel-async');
 
 /**
  * Create an instance of GithubContent to setup downloading of files.
@@ -35,74 +36,19 @@ function GithubContent(options) {
   }
 
   // setup our specific options
-  options = options || {};
-  options.json = false;
-  options.apiurl = 'https://raw.githubusercontent.com';
-  GithubBase.call(this, options);
-  utils.define(this, 'cache', {
-    owner: this.options.owner,
-    repo: this.options.repo,
-    branch: this.options.branch
-  });
+  var opts = extend({branch: 'master'}, options);
+  opts.json = false;
+  opts.apiurl = 'https://raw.githubusercontent.com';
+  GithubBase.call(this, opts);
+  this.options = extend({}, opts, this.options);
 }
 
 GithubBase.extend(GithubContent);
 
 /**
- * Set the `owner` to be used when downloading a file.
- *
- * ```js
- * gc.owner('doowb');
- * ```
- *
- * @param  {String} `owner` Github owner (user or organization)
- * @return {Object} `this` to enable chaining
- * @api public
- */
-
-GithubContent.prototype.owner = function(owner) {
-  this.cache.owner = owner;
-  return this;
-};
-
-/**
- * Set the `repo` to be used when downloading a file.
- *
- * ```js
- * gc.repo('github-content');
- * ```
- *
- * @param  {String} `repo` Github repoistory
- * @return {Object} `this` to enable chaining
- * @api public
- */
-
-GithubContent.prototype.repo = function(repo) {
-  this.cache.repo = repo;
-  return this;
-};
-
-/**
- * Set the `branch` to be used when downloading a file.
- *
- * ```js
- * gc.branch('dev');
- * ```
- *
- * @param  {String} `branch` Github branch
- * @return {Object} `this` to enable chaining
- * @api public
- */
-
-GithubContent.prototype.branch = function(branch) {
-  this.cache.branch = branch;
-  return this;
-};
-
-/**
- * Download a single file using the previous settings and the passed in file name.
+ * Download a single file given the file name and repository options.
  * File object returned will contain a `.path` property with the file path passed in
- * and a `.content` property with the contents of the downloaded file.
+ * and a `.contents` property with the contents of the downloaded file.
  *
  * ```js
  * gc.file('package.json', function(err, file) {
@@ -117,28 +63,38 @@ GithubContent.prototype.branch = function(branch) {
  * //=> }
  * ```
  *
- * @param  {String} `fp` file to download
+ * @param  {String} `path` file path to download
  * @param  {Object} `options` Additional options to base to [github-base] `.get` method.
  * @param  {Function} `cb` Callback function taking `err` and `file`
  * @return {Object} `this` to enable chaining
  * @api public
  */
 
-GithubContent.prototype.file = function(fp, options, cb) {
+GithubContent.prototype.file = function(path, options, cb) {
   if (typeof options === 'function') {
     cb = options;
     options = {};
   }
-  options = options || {};
 
-  var url = '/';
-  if (this.cache.owner) url += this.cache.owner + '/';
-  if (this.cache.repo) url += this.cache.repo + '/';
-  url += (this.cache.branch ? this.cache.branch : 'master') + '/';
-  url += fp;
-  this.get(url, options, function(err, content) {
+  if (typeof cb !== 'function') {
+    throw new TypeError('expected callback to be a function');
+  }
+
+  var opts = extend({branch: 'master', path: path}, this.options, options);
+  if (!opts.repo) {
+    cb(new Error('expected "options.repo" to be specified'));
+    return;
+  }
+
+  var segs = opts.repo.split('/');
+  if (segs.length > 1) {
+    opts.owner = segs[0];
+    opts.repo = segs[1];
+  }
+
+  this.get('/:owner/:repo/:branch/:path', opts, function(err, contents) {
     if (err) return cb(err);
-    cb(null, {path: fp, content: content});
+    cb(null, {path: path, contents: contents});
   });
   return this;
 };
@@ -146,7 +102,7 @@ GithubContent.prototype.file = function(fp, options, cb) {
 /**
  * Download an array of files using the previous settings and the passed in file names.
  * File objects returned will contain a `.path` property with the file path passed in
- * and a `.content` property with the contents of the downloaded file.
+ * and a `.contents` property with the contents of the downloaded file.
  *
  * ```js
  * gc.files(['package.json', 'index.js'], function(err, files) {
@@ -175,11 +131,11 @@ GithubContent.prototype.files = function(files, options, cb) {
     cb = options;
     options = {};
   }
-  options = options || {};
+  var opts = extend({}, options);
   files = arrayify(files);
 
-  utils.async.map(files, function(file, next) {
-    this.file(file, options, next);
+  map(files, function(file, next) {
+    this.file(file, opts, next);
   }.bind(this), cb);
 
   return this;
@@ -190,6 +146,27 @@ function arrayify(val) {
     return [];
   }
   return Array.isArray(val) ? val : [val];
+}
+
+function map(arr, iterator, cb) {
+  var i = 0;
+  var res = new Array(arr.length);
+  each(arr, function(ele, next) {
+    iterator(ele, function(err, val) {
+      if (err) {
+        next(err);
+        return err;
+      }
+      res[i++] = val;
+      next();
+    });
+  }, function(err) {
+    if (err) {
+      cb(err);
+      return;
+    }
+    cb(null, res);
+  });
 }
 
 /**

@@ -10,8 +10,7 @@
   },
   "license": "MIT",
   "files": [
-    "index.js",
-    "utils.js"
+    "index.js"
   ],
   "main": "index.js",
   "engines": {
@@ -21,10 +20,9 @@
     "test": "mocha"
   },
   "dependencies": {
-    "async": "^1.5.0",
-    "define-property": "^0.2.5",
-    "github-base": "^0.4.0",
-    "lazy-cache": "^0.2.4"
+    "each-parallel-async": "^1.0.0",
+    "extend-shallow": "^2.0.1",
+    "github-base": "^0.5.4"
   },
   "devDependencies": {
     "eslint-friendly-formatter": "^1.2.2",
